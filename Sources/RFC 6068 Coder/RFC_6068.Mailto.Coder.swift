@@ -1,7 +1,7 @@
 public import Byte
 public import Coder
 public import Cursor
-public import Cursor_Standard_Library_Integration
+public import Cursor
 public import RFC_6068
 import Parser
 import RFC_5322
@@ -43,9 +43,9 @@ extension RFC_6068.Mailto {
             }
 
             var headers: [RFC_6068.Mailto.Header] = []
-            if Scan.consume(0x3F, &input) {
+            if Scan.consume(Byte(bitPattern: 0x3F), &input) {
                 while true {
-                    if Scan.consume(0x26, &input) { continue }
+                    if Scan.consume(Byte(bitPattern: 0x26), &input) { continue }
                     let mark = input.checkpoint
                     guard let byte = input.next(), !Scan.isTerminator(byte) else {
                         input.seek(to: mark)

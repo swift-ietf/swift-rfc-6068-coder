@@ -1,7 +1,7 @@
 public import Byte
 public import Coder
 public import Cursor
-public import Cursor_Standard_Library_Integration
+public import Cursor
 public import RFC_6068
 import Parser
 import Serializer

@@ -21,9 +21,9 @@ enum Scan {
         }
     }
 
-    static func consume<Input: Cursor.`Protocol`<Byte, Never>>(_ code: UInt8, _ input: inout Input) -> Bool {
+    static func consume<Input: Cursor.`Protocol`<Byte, Never>>(_ expected: Byte, _ input: inout Input) -> Bool {
         let mark = input.checkpoint
-        guard let byte = input.next(), byte.bitPattern == code else {
+        guard let byte = input.next(), byte == expected else {
             input.seek(to: mark)
             return false
         }
@@ -36,7 +36,7 @@ enum Scan {
     ) -> Bool {
         let mark = input.checkpoint
         for expected in literal.utf8 {
-            guard let byte = input.next(), Self.lowercased(byte.bitPattern) == Self.lowercased(expected) else {
+            guard let byte = input.next(), Self.lowercased(byte) == Self.lowercased(Byte(bitPattern: expected)) else {
                 input.seek(to: mark)
                 return false
             }
@@ -44,8 +44,8 @@ enum Scan {
         return true
     }
 
-    static func lowercased(_ code: UInt8) -> UInt8 {
-        (0x41...0x5A).contains(code) ? code + 0x20 : code
+    static func lowercased(_ byte: Byte) -> Byte {
+        (0x41...0x5A).contains(byte.bitPattern) ? Byte(bitPattern: byte.bitPattern + 0x20) : byte
     }
 
     static func isTerminator(_ byte: Byte) -> Bool {
