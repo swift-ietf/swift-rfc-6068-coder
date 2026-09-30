@@ -55,5 +55,3 @@ extension RFC_6068.Mailto.Header {
 
     public static var coder: Coder<ArraySlice<Byte>, [Byte]> { .init() }
 }
-
-extension RFC_6068.Mailto.Header: Coder.Codable {}

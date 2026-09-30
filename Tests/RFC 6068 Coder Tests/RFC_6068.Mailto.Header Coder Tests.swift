@@ -73,14 +73,18 @@ struct `RFC_6068.Mailto.Header Coder Tests` {
     @Test
     func `serializes with percent-encoding outside qchar`() throws {
         let header = try RFC_6068.Mailto.Header(name: "a name", value: "Hello World & more")
-        #expect(try header.encoded() == "a%20name=Hello%20World%20%26%20more")
+        var bytes75: [Byte] = []
+        try RFC_6068.Mailto.Header.coder.serialize(header, into: &bytes75)
+        #expect(bytes75 == "a%20name=Hello%20World%20%26%20more")
     }
 
     @Test
     func `round-trips through its text form`() throws {
         let header = try RFC_6068.Mailto.Header.subject("Hello World & more")
-        var input = try header.encoded()[...]
-        #expect(try RFC_6068.Mailto.Header(decoding: &input) == header)
+        var bytes81: [Byte] = []
+        try RFC_6068.Mailto.Header.coder.serialize(header, into: &bytes81)
+        var input = bytes81[...]
+        #expect(try RFC_6068.Mailto.Header.coder.parse(&input) == header)
         #expect(input.isEmpty)
     }
 }

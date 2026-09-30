@@ -130,13 +130,17 @@ struct `RFC_6068.Mailto Coder Tests` {
             to: [try RFC_5322.Mailbox("user@example.com")],
             headers: [try .subject("Hello World"), try .body("Message content")]
         )
-        #expect(try mailto.encoded() == "mailto:user@example.com?subject=Hello%20World&body=Message%20content")
+        var bytes132: [Byte] = []
+        try RFC_6068.Mailto.coder.serialize(mailto, into: &bytes132)
+        #expect(bytes132 == "mailto:user@example.com?subject=Hello%20World&body=Message%20content")
     }
 
     @Test
     func `serializes only the addr-spec of a recipient with a display name`() throws {
         let mailto = RFC_6068.Mailto(to: [try RFC_5322.Mailbox("Jane Doe <jane@example.com>")])
-        #expect(try mailto.encoded() == "mailto:jane@example.com")
+        var bytes138: [Byte] = []
+        try RFC_6068.Mailto.coder.serialize(mailto, into: &bytes138)
+        #expect(bytes138 == "mailto:jane@example.com")
     }
 
     @Test
@@ -144,7 +148,9 @@ struct `RFC_6068.Mailto Coder Tests` {
         let mailto = RFC_6068.Mailto(
             to: [try RFC_5322.Mailbox("a@example.com"), try RFC_5322.Mailbox("b@example.com")]
         )
-        #expect(try mailto.encoded() == "mailto:a@example.com,b@example.com")
+        var bytes146: [Byte] = []
+        try RFC_6068.Mailto.coder.serialize(mailto, into: &bytes146)
+        #expect(bytes146 == "mailto:a@example.com,b@example.com")
     }
 
     @Test
@@ -153,8 +159,10 @@ struct `RFC_6068.Mailto Coder Tests` {
             to: [try RFC_5322.Mailbox("Jane Doe <jane@example.com>")],
             headers: [try .subject("Hello World & more"), try .cc("manager@example.com")]
         )
-        var input = try mailto.encoded()[...]
-        let reparsed = try RFC_6068.Mailto(decoding: &input)
+        var bytes155: [Byte] = []
+        try RFC_6068.Mailto.coder.serialize(mailto, into: &bytes155)
+        var input = bytes155[...]
+        let reparsed = try RFC_6068.Mailto.coder.parse(&input)
         #expect(reparsed.to.map(\.address) == ["jane@example.com"])
         #expect(reparsed.subject == "Hello World & more")
         #expect(reparsed.cc.map(\.address) == ["manager@example.com"])
