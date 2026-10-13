@@ -9,7 +9,7 @@ import Serializer
 
 extension RFC_6068.Mailto.Header: @retroactive ASCII.Parseable {
 
-    public init<Bytes: Swift.Collection>(ascii bytes: Bytes) throws(Error)
+    public init<Bytes: Swift::Collection>(ascii bytes: Bytes) throws(Error)
     where Bytes.Element == Byte {
         var input = ArraySlice(bytes)
         self = try RFC_6068.Mailto.Header.coder.parse(&input)
