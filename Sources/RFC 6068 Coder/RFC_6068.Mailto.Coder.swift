@@ -1,16 +1,14 @@
 public import Byte
 public import Coder
 public import Cursor
-public import Cursor
-public import RFC_6068
 import Parser
 import RFC_5322
+public import RFC_6068
 import Serializer
 
 extension RFC_6068.Mailto {
 
     public struct Coder<Input: Cursor.`Protocol`<Byte, Never>, Buffer: RangeReplaceableCollection<Byte>>: Coding {
-
 
         public typealias Output = RFC_6068.Mailto
 

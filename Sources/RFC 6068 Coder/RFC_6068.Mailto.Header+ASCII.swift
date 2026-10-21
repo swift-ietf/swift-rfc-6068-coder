@@ -1,10 +1,10 @@
 public import ASCII
 public import Binary
 public import Byte
-public import RFC_6068
 import Coder
 import Cursor
 import Parser
+public import RFC_6068
 import Serializer
 
 extension RFC_6068.Mailto.Header: @retroactive ASCII.Parseable {
